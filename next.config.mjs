@@ -16,6 +16,7 @@ const csp = [
 const nextConfig = {
   output: 'standalone',
   experimental: {
+    middlewareClientMaxBodySize: '1gb',
     serverActions: {
       bodySizeLimit: '1gb',
     },

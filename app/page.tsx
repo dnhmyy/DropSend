@@ -88,30 +88,48 @@ export default function UploadPage() {
     if (!file || stage === 'uploading') return;
     setStage('uploading'); setProgress(0);
 
-    // mock progress for better ux
-    let pct = 0;
-    const ticker = setInterval(() => {
-      pct = Math.min(pct + Math.random() * 14 + (pct < 70 ? 8 : 1), 92);
-      setProgress(pct);
-    }, 180);
-
     try {
       const fd = new FormData();
       fd.append('file', file);
       fd.append('expiration', expiry);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      clearInterval(ticker);
 
-      if (!res.ok) {
-        const j = await res.json();
-        throw new Error(j.error || 'Upload failed');
+      const res = await new Promise<XMLHttpRequest>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('POST', '/api/upload');
+        xhr.responseType = 'text';
+
+        xhr.upload.onprogress = (event) => {
+          if (!event.lengthComputable) return;
+          setProgress((event.loaded / event.total) * 100);
+        };
+
+        xhr.onload = () => resolve(xhr);
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.onabort = () => reject(new Error('Upload aborted'));
+
+        xhr.send(fd);
+      });
+
+      if (res.status < 200 || res.status >= 300) {
+        const contentType = res.getResponseHeader('content-type') || '';
+
+        if (contentType.includes('application/json')) {
+          const j = JSON.parse(res.responseText) as { error?: string };
+          throw new Error(j.error || 'Upload failed');
+        }
+
+        if (res.status === 413) {
+          throw new Error('Upload rejected with 413. File is too large or blocked by the proxy/CDN upload limit.');
+        }
+
+        throw new Error(`Upload failed with status ${res.status}`);
       }
 
       setProgress(100);
-      const data: UploadResult = await res.json();
+      const data = JSON.parse(res.responseText) as UploadResult;
       setTimeout(() => { setResult(data); setStage('success'); }, 320);
     } catch (err: unknown) {
-      clearInterval(ticker);
       setStage('error');
       setError(err instanceof Error ? err.message : 'Upload failed');
     }
