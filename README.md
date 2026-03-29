@@ -48,9 +48,14 @@ The fastest way to deploy is via Docker Compose.
 
 Expired files are purged via a protected API endpoint. Set up a cron job to keep your storage clean:
 
-`GET /api/cleanup?secret=YOUR_CLEANUP_SECRET`
+`POST /api/cleanup`
+
+Send the secret using either:
+
+*   `Authorization: Bearer YOUR_CLEANUP_SECRET`
+*   `x-cleanup-secret: YOUR_CLEANUP_SECRET`
 
 **Example Cron (hourly)**:
 ```bash
-0 * * * * curl -s "http://localhost:8001/api/cleanup?secret=your_secret" > /dev/null
+0 * * * * curl -s -X POST "http://localhost:8001/api/cleanup" -H "Authorization: Bearer your_secret" > /dev/null
 ```
