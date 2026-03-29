@@ -54,6 +54,3 @@ Expired files are purged via a protected API endpoint. Set up a cron job to keep
 ```bash
 0 * * * * curl -s "http://localhost:8001/api/cleanup?secret=your_secret" > /dev/null
 ```
-
----
-*Self-hosted file sharing made simple.*
