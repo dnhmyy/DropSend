@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.env*
+!.env.example
+*.db
+*.db-journal
+uploads/
+.data/
+.cache/
+.DS_Store
+Thumbs.db

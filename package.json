@@ -1,0 +1,27 @@
+{
+  "name": "dropsend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate deploy",
+    "cleanup": "node scripts/cleanup.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "next": "^16.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "prisma": "^5.22.0",
+    "typescript": "^5"
+  }
+}

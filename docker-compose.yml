@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./data:/app/data
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-file:/app/data/prod.db}
+      - CLEANUP_SECRET=${CLEANUP_SECRET:?set CLEANUP_SECRET in your environment}
+      - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL:-http://localhost:8001}
+    restart: always
