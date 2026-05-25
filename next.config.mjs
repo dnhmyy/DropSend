@@ -2,11 +2,11 @@
 const isProd = process.env.NODE_ENV === 'production';
 const csp = [
   "default-src 'self'",
-  isProd ? "script-src 'self' 'unsafe-inline'" : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  isProd ? "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com" : "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
   "font-src 'self' fonts.gstatic.com",
   "img-src 'self' data: blob:",
-  "connect-src 'self'",
+  "connect-src 'self' https://cloudflareinsights.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -16,7 +16,7 @@ const csp = [
 const nextConfig = {
   output: 'standalone',
   experimental: {
-    middlewareClientMaxBodySize: '1gb',
+    proxyClientMaxBodySize: '1gb',
     serverActions: {
       bodySizeLimit: '1gb',
     },
