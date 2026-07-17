@@ -236,7 +236,7 @@ export default function UploadPage() {
             onDrop={handleDrop}
           >
             <input
-              ref={inputRef} type="file" className="file-input" aria-label="Select a file"
+              ref={inputRef} type="file" name="file" className="file-input" aria-label="Select a file"
               style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', zIndex: 2, width: '100%', height: '100%' }}
               onChange={e => { const f = e.target.files?.[0]; if (f) applyFile(f); }}
             />
